@@ -31,17 +31,32 @@ class _BuatLaporanState extends State<BuatLaporan> {
   List<Object> images = List<Object>();
   Future<File> _imageFile;
   File _image;
+  
   List kategoriList;
   String _myKategori;
+  
+  List subkategoriList;
+  String _mySubKategori;
 
   Future<String> _getKategoriList() async {
     await http
-        .post("https://lapor.pasamanbaratkab.go.id/api_android/kategori.php")
+        .get("https://lapor.pasamanbaratkab.go.id/api_android/kategori.php")
         .then((response) {
       var data = json.decode(response.body);
       print(data);
       setState(() {
         kategoriList = data;
+      });
+    });
+  }
+  Future<String> _getSubKategoriList() async {
+    await http
+        .get("https://lapor.pasamanbaratkab.go.id/api_android/get_sub_kategori.php?kategori="+_myKategori)
+        .then((response) {
+      var data = json.decode(response.body);
+      print(data);
+      setState(() {
+        subkategoriList = data;
       });
     });
   }
@@ -55,6 +70,7 @@ class _BuatLaporanState extends State<BuatLaporan> {
   void initState() {
     // TODO: implement initState
     _getKategoriList();
+    _getSubKategoriList();
     getDataPengguna();
     super.initState();
   }
@@ -114,6 +130,7 @@ class _BuatLaporanState extends State<BuatLaporan> {
                       onChanged: (String newValue) {
                         setState(() {
                           _myKategori = newValue;
+                          _getSubKategoriList();
                           print(_myKategori);
                         });
                       },
@@ -121,6 +138,48 @@ class _BuatLaporanState extends State<BuatLaporan> {
                             return new DropdownMenuItem(
                               child: new Text(item['nama_kategori']),
                               value: item['id_kategori'].toString(),
+                            );
+                          })?.toList() ??
+                          [],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              height: 60,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: Color(0xFFE5E5E5),
+                ),
+              ),
+              child: Row(
+                children: <Widget>[
+                  SvgPicture.asset("assets/icons/maps-and-flags.svg"),
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                      value: _mySubKategori,
+                      hint: Text("Pilih Jenis Pelaporan"),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          _mySubKategori = newValue;
+                          print(_mySubKategori);
+                        });
+                      },
+                      items: subkategoriList?.map((item) {
+                            return new DropdownMenuItem(
+                              child: new Text(item['nama_sub_kategori']),
+                              value: item['id_sub'].toString(),
                             );
                           })?.toList() ??
                           [],
@@ -139,7 +198,7 @@ class _BuatLaporanState extends State<BuatLaporan> {
                     maxLines: 10,
                     decoration: new InputDecoration(
                         hintText: "Masukkan Keterangan Laporan Anda",
-                        labelText: "Keterangan v ",
+                        labelText: "Keterangan",
                         border: new OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(20.0))),
                   ),
@@ -269,6 +328,7 @@ class _BuatLaporanState extends State<BuatLaporan> {
 
     imageUploadRequest.fields['id_user'] = id_user;
     imageUploadRequest.fields['kategori'] = _myKategori;
+    imageUploadRequest.fields['sub_kategori'] = _mySubKategori;
     imageUploadRequest.fields['ket_laporan'] = tf_ket_laporan.text;
 
     try {
@@ -303,6 +363,7 @@ class _BuatLaporanState extends State<BuatLaporan> {
 
     imageUploadRequest.fields['id_user'] = id_user;
     imageUploadRequest.fields['kategori'] = _myKategori;
+      imageUploadRequest.fields['sub_kategori'] = _mySubKategori;
     imageUploadRequest.fields['ket_laporan'] = tf_ket_laporan.text;
 
     try {

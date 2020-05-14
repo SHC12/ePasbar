@@ -43,7 +43,7 @@ class _PelaporanState extends State<Pelaporan> {
     List<DataLapor> data_masuk = [];
 
     for (var u in jsonData) {
-      DataLapor modelData = DataLapor(u['id_lapor'], u['nama_kategori'],
+      DataLapor modelData = DataLapor(u['id_lapor'], u['nama_kategori'], u['nama_sub_kategori'],
           u['keterangan_laporan'], u['tanggal'], u['status']);
 
       data_masuk.add(modelData);
@@ -142,6 +142,7 @@ class _PelaporanState extends State<Pelaporan> {
 
                                   snapshot.data[index].id_lapor,
                                   snapshot.data[index].nama_kategori,
+                                  snapshot.data[index].nama_sub_kategori,
                                   snapshot.data[index].keterangan_laporan,
                                   snapshot.data[index].tanggal,
                                   snapshot.data[index].status
@@ -337,10 +338,11 @@ class CustomCardShapePainter extends CustomPainter {
 class DataLapor {
   String id_lapor;
   String nama_kategori;
+  String nama_sub_kategori;
   String keterangan_laporan;
   String tanggal;
   String status;
 
-  DataLapor(this.id_lapor, this.nama_kategori, this.keterangan_laporan,
+  DataLapor(this.id_lapor, this.nama_kategori, this.nama_sub_kategori, this.keterangan_laporan,
       this.tanggal, this.status);
 }

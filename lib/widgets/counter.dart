@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,8 +21,8 @@ class Counter extends StatelessWidget {
       children: <Widget>[
         Container(
           padding: EdgeInsets.all(6),
-          height: 25,
-          width: 25,
+          height: MediaQuery.of(context).size.height * 0.07,
+          width: MediaQuery.of(context).size.width * 0.07,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: color.withOpacity(.26),
@@ -38,7 +39,7 @@ class Counter extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10),
-        Text(
+        AutoSizeText(
           "$number",
           style: TextStyle(
             fontSize: 40,

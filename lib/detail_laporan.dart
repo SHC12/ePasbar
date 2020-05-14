@@ -7,28 +7,32 @@ import 'package:flutter/material.dart';
 class DetailLaporan extends StatefulWidget {
   String id_lapor;
   String nama_kategori;
+  String nama_sub_kategori;
   String keterangan_laporan;
   String tanggal;
   String status;
 
-  DetailLaporan(this.id_lapor, this.nama_kategori, this.keterangan_laporan,
+  DetailLaporan(this.id_lapor, this.nama_kategori, this.nama_sub_kategori, this.keterangan_laporan,
       this.tanggal, this.status);
 
   @override
   _DetailLaporanState createState() => _DetailLaporanState(
-      id_lapor, nama_kategori, keterangan_laporan, tanggal, status);
+      id_lapor, nama_kategori, nama_sub_kategori, keterangan_laporan, tanggal, status);
 }
 
 class _DetailLaporanState extends State<DetailLaporan> {
   String id_lapor;
   String nama_kategori;
+  String nama_sub_kategori;
   String keterangan_laporan;
   String tanggal;
   String status;
 
   double offset = 0;
 
-  _DetailLaporanState(String this.id_lapor, String this.nama_kategori,
+  _DetailLaporanState(String this.id_lapor, 
+  String this.nama_kategori,
+  String this.nama_sub_kategori,
       String this.keterangan_laporan, String this.tanggal, String this.status);
 
   bool _isVisible = true;
@@ -81,7 +85,9 @@ class _DetailLaporanState extends State<DetailLaporan> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Flexible(
-                        child: Text("Jenis Laporan : " + widget.nama_kategori))
+                        child: Text("Kategori Laporan : " + widget.nama_kategori +"\n\nJenis Laporan : "+widget.nama_sub_kategori)),
+                        
+                    
                   ],
                 ),
               ),

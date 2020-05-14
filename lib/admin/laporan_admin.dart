@@ -27,17 +27,14 @@ class _PelaporanAdminState extends State<PelaporanAdmin> {
       kode_instansi = pref.getString('kode_instansi') ?? '0';
     });
 
-    
-  print(kode_instansi);
+    print(kode_instansi);
   }
-
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     dataAkun();
-   
   }
 
   Future<List<DataLaporAdmin>> futureList;
@@ -59,6 +56,7 @@ class _PelaporanAdminState extends State<PelaporanAdmin> {
           u['id_lapor'],
           u['id_user'],
           u['nama_kategori'],
+          u['nama_sub_kategori'],
           u['keterangan_laporan'],
           u['foto_laporan'],
           u['tanggal'],
@@ -79,14 +77,14 @@ class _PelaporanAdminState extends State<PelaporanAdmin> {
   Future<List<DataLaporAdmin>> _refresh() {
     futureList = _getData();
     return futureList;
-  
-}
-final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+  }
+
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
- final double _borderRadius = 24;
+  final double _borderRadius = 24;
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    return Scaffold(
       body: Container(
         child: Column(
           children: <Widget>[
@@ -147,25 +145,30 @@ final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
                               return Container(
                                 child: GestureDetector(
                                   onTap: () {
-                                    
                                     Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailLaporanAdmin(
-
-                                  snapshot.data[index].id_lapor,
-                                  snapshot.data[index].id_user,
-                                  snapshot.data[index].nama_kategori,
-                                  snapshot.data[index].keterangan_laporan,
-                                  snapshot.data[index].foto_laporan,
-                                  snapshot.data[index].tanggal,
-                                  snapshot.data[index].status,
-                                  snapshot.data[index].nama_user,
-                                  snapshot.data[index].no_telp_user,
-                                  snapshot.data[index].alamat_user
-
-                                   ),
-                              ));
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailLaporanAdmin(
+                                                  snapshot.data[index].id_lapor,
+                                                  snapshot.data[index].id_user,
+                                                  snapshot.data[index]
+                                                      .nama_kategori,
+                                                  snapshot.data[index]
+                                                      .nama_sub_kategori,
+                                                  snapshot.data[index]
+                                                      .keterangan_laporan,
+                                                  snapshot
+                                                      .data[index].foto_laporan,
+                                                  snapshot.data[index].tanggal,
+                                                  snapshot.data[index].status,
+                                                  snapshot
+                                                      .data[index].nama_user,
+                                                  snapshot
+                                                      .data[index].no_telp_user,
+                                                  snapshot
+                                                      .data[index].alamat_user),
+                                        ));
                                   },
                                   child: new Center(
                                     child: Padding(
@@ -298,7 +301,6 @@ final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
           ],
         ),
       ),
-     
     );
   }
 }
@@ -345,6 +347,7 @@ class DataLaporAdmin {
   String id_lapor;
   String id_user;
   String nama_kategori;
+  String nama_sub_kategori;
   String keterangan_laporan;
   String foto_laporan;
   String tanggal;
@@ -357,6 +360,7 @@ class DataLaporAdmin {
       this.id_lapor,
       this.id_user,
       this.nama_kategori,
+      this.nama_sub_kategori,
       this.keterangan_laporan,
       this.foto_laporan,
       this.tanggal,

@@ -1,6 +1,8 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:epasbar/admin/tindaklanjuti.dart';
 import 'package:epasbar/animasi/FadeAnimation.dart';
 import 'package:epasbar/constant.dart';
+import 'package:epasbar/hasil_tindakan.dart';
 import 'package:epasbar/widgets/counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -9,6 +11,7 @@ class DetailLaporanAdmin extends StatefulWidget {
   String id_lapor;
   String id_user;
   String nama_kategori;
+  String nama_sub_kategori;
   String keterangan_laporan;
   String foto_laporan;
   String tanggal;
@@ -21,6 +24,7 @@ class DetailLaporanAdmin extends StatefulWidget {
       this.id_lapor,
       this.id_user,
       this.nama_kategori,
+      this.nama_sub_kategori,
       this.keterangan_laporan,
       this.foto_laporan,
       this.tanggal,
@@ -33,6 +37,7 @@ class DetailLaporanAdmin extends StatefulWidget {
       id_lapor,
       id_user,
       nama_kategori,
+      nama_sub_kategori,
       keterangan_laporan,
       foto_laporan,
       tanggal,
@@ -46,6 +51,7 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
   String id_lapor;
   String id_user;
   String nama_kategori;
+  String nama_sub_kategori;
   String keterangan_laporan;
   String foto_laporan;
   String tanggal;
@@ -58,6 +64,7 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
       this.id_lapor,
       this.id_user,
       this.nama_kategori,
+      this.nama_sub_kategori,
       this.keterangan_laporan,
       this.foto_laporan,
       this.tanggal,
@@ -115,21 +122,23 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
                         ],
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                "Nama : " + widget.nama_user,
+                         
+                              Flexible(
+                                flex: 1,
+                                                              child: AutoSizeText(
+                                  "Nama : " + widget.nama_user+"\nNo Telp : " + widget.no_telp_user+"\nAlamat : " + widget.alamat_user,
+                                  maxLines: 3,
+                                ),
                               ),
-                              SizedBox(height: 10),
-                              Text("No Telp : " + widget.no_telp_user),
-                              SizedBox(height: 10),
-                              Text("Alamat : " + widget.alamat_user),
+                              // SizedBox(height: 10),
+                              // AutoSizeText("No Telp : " + widget.no_telp_user, overflow: TextOverflow.ellipsis, ),
+                              // SizedBox(height: 10),
+                              // AutoSizeText("Alamat : " + widget.alamat_user, overflow: TextOverflow.ellipsis,),
                             ],
                           ),
-                        ],
-                      ),
+                        
                     ),
                   ),
                   SizedBox(height: 10),
@@ -152,8 +161,10 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Flexible(
-                              child: Text(
-                                  "Jenis Laporan : " + widget.nama_kategori))
+                              child: Text("Kategori Laporan : " +
+                                  widget.nama_kategori +
+                                  "\n\nJenis Laporan : " +
+                                  widget.nama_sub_kategori)),
                         ],
                       ),
                     ),
@@ -263,15 +274,19 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
                     1.6,
                     FlatButton(
                       onPressed: () {
-                         Navigator.push(
+                        if (widget.status == 'Belum Ditindaklanjuti') {
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TindakLanjuti(id_lapor
-
-                                  
-
-                                   ),
+                                builder: (context) => TindakLanjuti(id_lapor),
                               ));
+                        } else {
+                            Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HasilTindakan(widget.id_lapor),
+                        ));
+                        }
                       },
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
@@ -282,8 +297,13 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
                             borderRadius: BorderRadius.circular(50),
                             color: Colors.blue[900]),
                         child: Center(
-                          child: Text(
+                          child: widget.status == 'Belum Ditindaklanjuti' ? Text(
                             "Tindak lanjuti",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ) : Text(
+                            "Lihat Tanggapan",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -310,14 +330,16 @@ class ImageDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-       width: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 1.5,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: foto_laporan == "" ? NetworkImage(
-                                  'https://git.unilim.fr/assets/no_group_avatar-4a9d347a20d783caee8aaed4a37a65930cb8db965f61f3b72a2e954a0eaeb8ba.png') : NetworkImage(
-                    "https://lapor.pasamanbaratkab.go.id/image/" +
-                        foto_laporan),
+                image: foto_laporan == ""
+                    ? NetworkImage(
+                        'https://git.unilim.fr/assets/no_group_avatar-4a9d347a20d783caee8aaed4a37a65930cb8db965f61f3b72a2e954a0eaeb8ba.png')
+                    : NetworkImage(
+                        "https://lapor.pasamanbaratkab.go.id/image/" +
+                            foto_laporan),
                 fit: BoxFit.cover)),
       ),
     );
