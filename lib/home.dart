@@ -314,12 +314,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         text: "Kasus Covid-19\n",
                                         style: kTitleTextstyle,
                                       ),
-                                      TextSpan(
-                                        text: "Data terakhir diupdate pada 28",
-                                        style: TextStyle(
-                                          color: kTextLightColor,
-                                        ),
-                                      ),
+                                      // TextSpan(
+                                      //   text: "Data terakhir diupdate pada 28",
+                                      //   style: TextStyle(
+                                      //     color: kTextLightColor,
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),

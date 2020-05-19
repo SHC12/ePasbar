@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:epasbar/admin/oper_opd.dart';
 import 'package:epasbar/admin/tindaklanjuti.dart';
 import 'package:epasbar/animasi/FadeAnimation.dart';
 import 'package:epasbar/constant.dart';
@@ -6,6 +7,7 @@ import 'package:epasbar/hasil_tindakan.dart';
 import 'package:epasbar/widgets/counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailLaporanAdmin extends StatefulWidget {
   String id_lapor;
@@ -59,6 +61,9 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
   String nama_user;
   String no_telp_user;
   String alamat_user;
+  String kode_instansi;
+
+  SharedPreferences pref;
 
   _DetailLaporanAdminState(
       this.id_lapor,
@@ -72,6 +77,25 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
       this.nama_user,
       this.no_telp_user,
       this.alamat_user);
+
+  dataAkun() async {
+    pref = await SharedPreferences.getInstance();
+
+    setState(() {
+      id_user = pref.getString('id_user') ?? '0';
+      kode_instansi = pref.getString('kode_instansi') ?? '0';
+    });
+
+    print("kode instansi : ${kode_instansi}");
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dataAkun();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,6 +103,7 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
         title: Text("Detail Laporan"),
       ),
       body: SingleChildScrollView(
+        
         scrollDirection: Axis.vertical,
         child: Column(
           children: <Widget>[
@@ -124,21 +149,24 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                         
-                              Flexible(
-                                flex: 1,
-                                                              child: AutoSizeText(
-                                  "Nama : " + widget.nama_user+"\nNo Telp : " + widget.no_telp_user+"\nAlamat : " + widget.alamat_user,
-                                  maxLines: 3,
-                                ),
-                              ),
-                              // SizedBox(height: 10),
-                              // AutoSizeText("No Telp : " + widget.no_telp_user, overflow: TextOverflow.ellipsis, ),
-                              // SizedBox(height: 10),
-                              // AutoSizeText("Alamat : " + widget.alamat_user, overflow: TextOverflow.ellipsis,),
-                            ],
+                          Flexible(
+                            flex: 1,
+                            child: AutoSizeText(
+                              "Nama : " +
+                                  widget.nama_user +
+                                  "\nNo Telp : " +
+                                  widget.no_telp_user +
+                                  "\nAlamat : " +
+                                  widget.alamat_user,
+                              maxLines: 3,
+                            ),
                           ),
-                        
+                          // SizedBox(height: 10),
+                          // AutoSizeText("No Telp : " + widget.no_telp_user, overflow: TextOverflow.ellipsis, ),
+                          // SizedBox(height: 10),
+                          // AutoSizeText("Alamat : " + widget.alamat_user, overflow: TextOverflow.ellipsis,),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -272,6 +300,36 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
                   ),
                   FadeAnimation(
                     1.6,
+                    kode_instansi == '4' ?FlatButton(
+                      onPressed: () {
+                        
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OperOPD(id_lapor),
+                              ));
+                       
+                       print(kode_instansi);
+                      },
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      child: Container(
+                        height: 50,
+                        margin: EdgeInsets.symmetric(horizontal: 50),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.green[900]),
+                        child: Center(
+                          child: Text(
+                                  "Tindak lanjuti",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                )
+                             
+                        ),
+                      ),
+                    ) :
                     FlatButton(
                       onPressed: () {
                         if (widget.status == 'Belum Ditindaklanjuti') {
@@ -281,11 +339,12 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
                                 builder: (context) => TindakLanjuti(id_lapor),
                               ));
                         } else {
-                            Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HasilTindakan(widget.id_lapor),
-                        ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    HasilTindakan(widget.id_lapor),
+                              ));
                         }
                       },
                       splashColor: Colors.transparent,
@@ -297,17 +356,19 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
                             borderRadius: BorderRadius.circular(50),
                             color: Colors.blue[900]),
                         child: Center(
-                          child: widget.status == 'Belum Ditindaklanjuti' ? Text(
-                            "Tindak lanjuti",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ) : Text(
-                            "Lihat Tanggapan",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
+                          child: widget.status == 'Belum Ditindaklanjuti'
+                              ? Text(
+                                  "Tindak lanjuti",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              : Text(
+                                  "Lihat Tanggapan",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
                         ),
                       ),
                     ),
