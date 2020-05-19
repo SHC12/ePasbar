@@ -304,7 +304,7 @@ class _DetailLaporanAdminState extends State<DetailLaporanAdmin> {
                       onPressed: () {
                         
                           Navigator.push(
-                              context,
+                              context, 
                               MaterialPageRoute(
                                 builder: (context) => OperOPD(id_lapor),
                               ));
